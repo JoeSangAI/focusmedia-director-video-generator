@@ -1,0 +1,269 @@
+#!/usr/bin/env node
+const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+const SCRIPT = path.join(__dirname, 'assert_creative_prompt.js');
+
+function writeJson(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
+}
+
+function runAssert(contract, prompt) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'creative-prompt-assert-'));
+  const contractPath = path.join(dir, 'story_contract.json');
+  const promptPath = path.join(dir, 'creative_prompt.md');
+  const outPath = path.join(dir, 'assertion_report.json');
+  writeJson(contractPath, contract);
+  fs.writeFileSync(promptPath, prompt, 'utf8');
+  const result = spawnSync(process.execPath, [SCRIPT, '--contract', contractPath, '--prompt', promptPath, '--out-json', outPath], {
+    encoding: 'utf8'
+  });
+  if (result.status !== 0) {
+    throw new Error(`assert_creative_prompt exited ${result.status}\nSTDOUT:\n${result.stdout}\nSTDERR:\n${result.stderr}`);
+  }
+  return JSON.parse(fs.readFileSync(outPath, 'utf8'));
+}
+
+const contract = {
+  case_id: 'hujihua-smoke',
+  brand: '胡姬花',
+  product: '古法小榨花生油',
+  required_copy: [
+    '不是所有的香，都叫古法香。',
+    '胡姬花，只做花生油。',
+    '坚守非遗古法。',
+    '拒绝科技狠活。',
+    '胡姬花，古法小榨花生油。',
+    '百年非遗古法香。',
+    '好的花生油，就认古法香。',
+    '胡姬花。'
+  ],
+  required_closing_copy: ['胡姬花。'],
+  required_assets: [
+    { name: '卖油郎', terms: ['卖油郎'] },
+    { name: '胡姬花产品瓶', terms: ['胡姬花', '产品瓶'] },
+    { name: '古法香大字', terms: ['古法香'] }
+  ],
+  required_shots: 4,
+  forbidden_terms: ['二维码', '竞品', '化学瓶', '实验室恐吓画面']
+};
+
+const goodPrompt = `
+全片目标：手绘动画风的胡姬花花生油广告，用卖油郎和金色书法大字强化古法香。
+
+必读口播脚本：以下八句必须按顺序逐句完整读出，不改字、不调换顺序：
+1. 不是所有的香，都叫古法香。
+2. 胡姬花，只做花生油。
+3. 坚守非遗古法。
+4. 拒绝科技狠活。
+5. 胡姬花，古法小榨花生油。
+6. 百年非遗古法香。
+7. 好的花生油，就认古法香。
+8. 胡姬花。
+
+主体定义：卖油郎是圆脸中年男性，红色头巾，棕色传统衣衫；胡姬花产品瓶是红金色花生油瓶，始终和古法香绑定。
+
+声音计划：中文男声，有北方老字号吆喝感。按必读口播脚本逐句读出，句间有短气口，不能把两句吞成一句。
+
+文字计划：古法香作为最大金色毛笔字反复出现；坚守非遗古法、拒绝科技狠活、好的花生油 就认古法香作为大字出现。
+
+镜头1：老作坊暖光中，固定中景切入，卖油郎捧出胡姬花产品瓶，右侧落下巨大金色毛笔字古法香。
+镜头2：镜头切到花生和产品瓶近景，卖油郎端着簸箕走过，花生在金光中轻轻滚动。
+镜头3：镜头切到木榨工艺，卖油郎用力推压木杆，金色花生油从木槽流下。
+镜头4：镜头切到产品收口，胡姬花产品瓶和古法香大字定格，男声收尾说胡姬花。
+
+必要约束：不要水印，不要随机英文，不要二维码，不要无关Logo，不要竞品包装或竞品标识。
+`;
+
+const passReport = runAssert(contract, goodPrompt);
+assert.equal(passReport.status, 'pass');
+assert.equal(passReport.issues.length, 0);
+
+const badPrompt = `
+全片目标：生成一支 15 秒 16:9 720p 的 Seedance 视频，完成后返回 mp4 下载链接。
+主体定义：卖油郎讲古法香。
+声音计划：不是所有的香，都叫古法香。胡姬花，只做花生油。坚守非遗古法。拒绝科技狠活。胡姬花，古法小榨花生油。百年非遗古法香。好的花生油，就认古法香。
+文字计划：古法香。
+镜头1：卖油郎拿着化学瓶出现，旁边摆着竞品包装。
+镜头2：木榨出油。
+必要约束：不要水印。
+`;
+
+const failReport = runAssert(contract, badPrompt);
+assert.equal(failReport.status, 'fail');
+const codes = failReport.issues.map((issue) => issue.code);
+assert(codes.includes('missing_voiceover_script_section'), 'should catch buried required VO script');
+assert(codes.includes('missing_closing_copy'), 'should catch missing final brand copy');
+assert(codes.includes('process_term_in_prompt'), 'should catch Seedance/mp4 process terms');
+assert(codes.includes('runtime_term_in_prompt'), 'should catch 15s/16:9/720p runtime pollution');
+assert(codes.includes('missing_shot_sequence'), 'should catch missing shots');
+assert(codes.includes('forbidden_term_present'), 'should catch non-negated forbidden terms');
+
+const shotDensityContract = {
+  case_id: 'shot-density-smoke',
+  brand: '胡姬花',
+  product: '古法小榨花生油',
+  required_copy: ['胡姬花。'],
+  required_closing_copy: ['胡姬花。'],
+  required_assets: [],
+  min_meaningful_shots: 8
+};
+
+const sparsePrompt = `
+全片目标：手绘动画风的胡姬花广告。
+必读口播脚本：
+1. 胡姬花。
+主体定义：卖油郎和胡姬花产品瓶。
+声音计划：胡姬花。
+文字计划：古法香。
+镜头1：卖油郎出场。
+镜头2：木榨出油。
+镜头3：产品瓶出现。
+镜头4：收尾说胡姬花。
+必要约束：不要水印。
+`;
+
+const sparseReport = runAssert(shotDensityContract, sparsePrompt);
+assert.equal(sparseReport.status, 'fail');
+assert(
+  sparseReport.issues.map((issue) => issue.code).includes('insufficient_shot_count'),
+  'should catch a 15s Focus Media prompt with too few shots'
+);
+
+const detailPlanContract = {
+  case_id: 'director-detail-smoke',
+  brand: '胡姬花',
+  product: '古法小榨花生油',
+  required_copy: ['胡姬花。'],
+  required_closing_copy: ['胡姬花。'],
+  required_assets: [],
+  required_prompt_terms: ['音乐床', '音效', '道具逻辑', '最后一帧']
+};
+
+const thinPrompt = `
+全片目标：胡姬花广告。
+必读口播脚本：
+1. 胡姬花。
+主体定义：卖油郎和胡姬花古法小榨花生油产品瓶。
+声音计划：男声读胡姬花。
+文字计划：胡姬花。
+镜头1：产品瓶出现，男声说胡姬花。
+必要约束：不要水印。
+`;
+
+const detailFailReport = runAssert(detailPlanContract, thinPrompt);
+assert.equal(detailFailReport.status, 'fail');
+assert(
+  detailFailReport.issues.map((issue) => issue.code).includes('missing_required_prompt_term'),
+  'should catch missing director-detail prompt terms'
+);
+
+const detailedPrompt = `
+全片目标：胡姬花广告。
+必读口播脚本：
+1. 胡姬花。
+主体定义：卖油郎和胡姬花古法小榨花生油产品瓶。
+声音计划：全片有连续音乐床，关键转场有音效，品牌落版音乐尾音延续到最后一帧。
+文字计划：胡姬花。
+动作与道具逻辑：花生、木榨、油流和产品瓶都有道具逻辑，分别承担原料证明、工艺证明、香气记忆和品牌收口。
+镜头1：产品瓶出现，男声说胡姬花。
+必要约束：不要水印。
+`;
+
+const detailPassReport = runAssert(detailPlanContract, detailedPrompt);
+assert.equal(detailPassReport.status, 'pass');
+
+const noRequiredVoiceContract = {
+  case_id: 'no-required-voice-smoke',
+  brand: '胡姬花',
+  product: '古法小榨花生油',
+  required_assets: []
+};
+
+const noRequiredVoicePrompt = `
+全片目标：胡姬花广告。
+主体定义：胡姬花古法小榨花生油产品瓶。
+声音计划：轻快音乐床和简短环境音。
+文字计划：古法香。
+镜头1：产品瓶出现。
+必要约束：不要水印。
+`;
+
+const noRequiredVoiceReport = runAssert(noRequiredVoiceContract, noRequiredVoicePrompt);
+assert.equal(noRequiredVoiceReport.status, 'pass');
+
+const voiceoverScriptOnlyContract = {
+  case_id: 'voiceover-script-only-smoke',
+  brand: '胡姬花',
+  product: '古法小榨花生油',
+  voiceover_script: ['胡姬花。'],
+  required_assets: []
+};
+
+const voiceoverScriptOnlyPrompt = `
+全片目标：胡姬花古法小榨花生油广告。
+主体定义：胡姬花古法小榨花生油产品瓶。
+声音计划：男声最后说胡姬花。
+文字计划：胡姬花。
+镜头1：产品瓶出现，男声说胡姬花。
+必要约束：不要水印。
+`;
+
+const voiceoverScriptOnlyReport = runAssert(voiceoverScriptOnlyContract, voiceoverScriptOnlyPrompt);
+assert.equal(voiceoverScriptOnlyReport.status, 'fail');
+assert(
+  voiceoverScriptOnlyReport.issues.map((issue) => issue.code).includes('missing_voiceover_script_section'),
+  'should require a first-class VO script when story_contract.voiceover_script exists'
+);
+
+const buriedVoiceoverPrompt = `
+全片目标：胡姬花广告。
+主体定义：卖油郎和胡姬花产品瓶。
+声音计划：男声读出胡姬花。不是所有的香，都叫古法香。胡姬花，只做花生油。坚守非遗古法。拒绝科技狠活。胡姬花，古法小榨花生油。百年非遗古法香。好的花生油，就认古法香。胡姬花。
+文字计划：古法香。
+镜头1：卖油郎出场。
+镜头2：木榨出油。
+镜头3：产品瓶出现。
+镜头4：最终说胡姬花。
+必要约束：不要水印。
+`;
+
+const buriedVoiceoverReport = runAssert(contract, buriedVoiceoverPrompt);
+assert.equal(buriedVoiceoverReport.status, 'fail');
+assert(
+  buriedVoiceoverReport.issues.map((issue) => issue.code).includes('missing_voiceover_script_section'),
+  'should fail when ad copy is buried in sound plan instead of a first-class VO script'
+);
+
+const reorderedVoiceoverPrompt = `
+全片目标：胡姬花广告。
+必读口播脚本：
+1. 不是所有的香，都叫古法香。
+2. 只做花生油，胡姬花。
+3. 坚守非遗古法。
+4. 拒绝科技狠活。
+5. 胡姬花，古法小榨花生油。
+6. 百年非遗古法香。
+7. 好的花生油，就认古法香。
+8. 胡姬花。
+主体定义：卖油郎和胡姬花产品瓶。
+声音计划：按必读口播脚本读出。
+文字计划：古法香。
+镜头1：卖油郎出场。
+镜头2：木榨出油。
+镜头3：产品瓶出现。
+镜头4：最终说胡姬花。
+必要约束：不要水印。
+`;
+
+const reorderedVoiceoverReport = runAssert(contract, reorderedVoiceoverPrompt);
+assert.equal(reorderedVoiceoverReport.status, 'fail');
+assert(
+  reorderedVoiceoverReport.issues.map((issue) => issue.code).includes('required_copy_not_in_voiceover_script'),
+  'should fail when a required VO line is rewritten or order-reversed inside the script'
+);
+
+console.log('test_assert_creative_prompt passed');
