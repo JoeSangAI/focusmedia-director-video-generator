@@ -8,7 +8,7 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".md", ".json", ".csv", ".js", ".py", ".yaml", ".yml", ".gitignore"}
 FORBIDDEN_PROVIDER_TERMS = ("pix" + "verse", "pixel" + "verse", "pai" + "-cli")
-FORBIDDEN_FILES = {"README.md", "INSTALLATION_GUIDE.md", "QUICK_REFERENCE.md", "CHANGELOG.md", ".DS_Store", ".env"}
+FORBIDDEN_FILES = {"INSTALLATION_GUIDE.md", "QUICK_REFERENCE.md", "CHANGELOG.md", ".DS_Store", ".env"}
 FORBIDDEN_MEDIA_SUFFIXES = {".mp3", ".wav", ".m4a", ".mp4", ".mov"}
 PERSONAL_PATH = re.compile("/" + "Users" + r"/[^/\s\"']+")
 
@@ -16,6 +16,7 @@ PERSONAL_PATH = re.compile("/" + "Users" + r"/[^/\s\"']+")
 files = [path for path in ROOT.rglob("*") if path.is_file() and ".git" not in path.parts]
 relative_files = {path.relative_to(ROOT).as_posix() for path in files}
 required_capability_files = {
+    "README.md",
     "references/storyboard-execution.md",
     "references/doubao-audio-generation.md",
     "scripts/generate_doubao_audio.js",
