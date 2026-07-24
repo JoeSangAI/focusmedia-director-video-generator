@@ -1,6 +1,4 @@
 interface:
-  display_name: "FocusMedia 导演级视频生成"
-  short_description: "从广告语到导演级提示词与众小智视频提交任务包"
-  default_prompt: "Use $focusmedia-director-video-generator to turn a FocusMedia ad slogan or brief into a director-level video prompt and Seedance submission package."
-policy:
-  allow_implicit_invocation: true
+  display_name: "FocusMedia TVC Creative Director"
+  short_description: "Director-led multimodal TVC creation and review"
+  default_prompt: "Use $focusmedia-tvc-creative-director to turn this locked ad message or rich brief into a director-approved, multimodal Focus Media TVC workflow."

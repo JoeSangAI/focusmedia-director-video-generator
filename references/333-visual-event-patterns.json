@@ -1,0 +1,1050 @@
+{
+  "schema_name": "visual_memory_event_operation_library",
+  "schema_version": "v0.7",
+  "created_at": "2026-07-05",
+  "source_file": "internal analysis of 333 delivered Focus Media TVCs",
+  "source_rows": 333,
+  "position_in_pipeline": "after v0.5 visual carrier gate and v0.6 carrier-to-event selector; before 9-grid pressure test and Seedance/TVC prompt building",
+  "core_rule": "A memorable Focus Media visual idea is not a slogan split into shots. It is a visible event operation: a carrier is triggered, repeated, and returned to brand memory.",
+  "operation_order_for_decision": [
+    "先识别广告语类型",
+    "选择可见承载物",
+    "选择创意事件操作",
+    "定义产品因果角色",
+    "做9宫格压力测试",
+    "再进入Prompt"
+  ],
+  "operation_cards": [
+    {
+      "operation": "节拍化",
+      "count": 137,
+      "share": 0.4114,
+      "top_copy_types": [
+        {
+          "type": "图文节奏/Jingle",
+          "count": 93,
+          "share_within_operation": 0.6788
+        },
+        {
+          "type": "数字/标准证明",
+          "count": 19,
+          "share_within_operation": 0.1387
+        },
+        {
+          "type": "产品动作锤",
+          "count": 14,
+          "share_within_operation": 0.1022
+        },
+        {
+          "type": "感官材料隐喻",
+          "count": 3,
+          "share_within_operation": 0.0219
+        },
+        {
+          "type": "角色/IP/名人",
+          "count": 2,
+          "share_within_operation": 0.0146
+        },
+        {
+          "type": "看不见功能显形",
+          "count": 2,
+          "share_within_operation": 0.0146
+        }
+      ],
+      "top_visual_carriers": [
+        {
+          "carrier": "节奏/文字/Jingle承载",
+          "count": 133,
+          "share_within_operation": 0.9708
+        },
+        {
+          "carrier": "产品/人物动作承载",
+          "count": 3,
+          "share_within_operation": 0.0219
+        },
+        {
+          "carrier": "看不见功能显形承载",
+          "count": 1,
+          "share_within_operation": 0.0073
+        }
+      ],
+      "top_shot_mechanisms": [
+        {
+          "shot_primary": "图文节奏/Jingle",
+          "count": 131,
+          "share_within_operation": 0.9562
+        },
+        {
+          "shot_primary": "数字/标准证明",
+          "count": 3,
+          "share_within_operation": 0.0219
+        },
+        {
+          "shot_primary": "产品动作锤",
+          "count": 2,
+          "share_within_operation": 0.0146
+        },
+        {
+          "shot_primary": "看不见功能显形",
+          "count": 1,
+          "share_within_operation": 0.0073
+        }
+      ],
+      "policy": {
+        "memory_job": "把品牌名、产品名、卖点或价格压成可重复的声音/画面节拍，让电梯场景里短时记住。",
+        "use_when": [
+          "广告语本身是 Jingle、押韵、重复品牌名或重复产品名",
+          "促销、餐饮、服饰等多 SKU 或高频信息需要快速记住",
+          "声音资产强于单一画面资产"
+        ],
+        "event_sentence_template": "让【品牌/产品/关键词】按固定节拍反复出现，每一次节拍都绑定一个产品、包装、价格或使用动作，最后回到品牌名。",
+        "nine_grid_pressure_questions": [
+          "9 格是否形成稳定节奏，而不是讲复杂故事？",
+          "品牌名/产品名是否至少在节拍中被重复 2-3 次？",
+          "画面是否服务节奏，不抢走声音记忆？"
+        ],
+        "hard_fail": [
+          "为了显得高级而拆掉 jingle",
+          "九格变成无关剧情，品牌节拍消失",
+          "只堆大字，不绑定产品或包装"
+        ]
+      },
+      "example_cases": [
+        {
+          "industry": "餐饮文旅",
+          "brand": "肥肥虾庄",
+          "product_or_campaign": "黄鹤楼联名餐饮",
+          "copy_primary": "图文节奏/Jingle",
+          "shot_primary": "图文节奏/Jingle",
+          "carrier_primary_label": "节奏/文字/Jingle承载",
+          "carrier_hit_terms": "rhythm_text_jingle:唱段；旋律；节拍；jingle",
+          "vo_excerpt": "【唱】好水养好虾；【唱】每只都个大；【唱】非遗制作技艺；【唱】肥肥虾庄；【唱】虾大；【唱】虾好；【唱】味道好；【唱】吃好虾；【唱】来肥肥；【唱】肥肥虾庄",
+          "rule_reason": "主承载物或广告语/成片机制指向 Jingle/节奏，优先把声音节拍变成视觉重复。"
+        },
+        {
+          "industry": "餐饮文旅",
+          "brand": "肯德基",
+          "product_or_campaign": "避风塘大虾塔可",
+          "copy_primary": "图文节奏/Jingle",
+          "shot_primary": "图文节奏/Jingle",
+          "carrier_primary_label": "节奏/文字/Jingle承载",
+          "carrier_hit_terms": "rhythm_text_jingle:唱段；大字；字幕；旋律；节拍；jingle",
+          "vo_excerpt": "【台词】项目多到爆炸；来个肯德基塔可吧；【唱】抬头吃塔可，一口超有料；多汁鸡排；包裹大只南美白虾；秘制避风塘风味；肯德基避风塘大虾塔可，2个25.9元；【唱】抬头吃塔可，好事会发生",
+          "rule_reason": "主承载物或广告语/成片机制指向 Jingle/节奏，优先把声音节拍变成视觉重复。"
+        },
+        {
+          "industry": "餐饮文旅",
+          "brand": "南海悦品",
+          "product_or_campaign": "海鲜套餐",
+          "copy_primary": "图文节奏/Jingle",
+          "shot_primary": "图文节奏/Jingle",
+          "carrier_primary_label": "节奏/文字/Jingle承载",
+          "carrier_hit_terms": "rhythm_text_jingle:唱段；大字；字幕；旋律；节拍；促销页；jingle",
+          "vo_excerpt": "【唱】吃海鲜到南海悦品；【唱】吃鲜活海鲜到南海悦品；南海悦品，猛海鲜，好吃不贵；帝王蟹四人餐，只需999；品帝王之蟹，谢心中贵人；【唱】吃海鲜就到南海悦品",
+          "rule_reason": "主承载物或广告语/成片机制指向 Jingle/节奏，优先把声音节拍变成视觉重复。"
+        },
+        {
+          "industry": "餐饮文旅",
+          "brand": "中华洞天",
+          "product_or_campaign": "四川江油世界奇观",
+          "copy_primary": "数字/标准证明",
+          "shot_primary": "图文节奏/Jingle",
+          "carrier_primary_label": "节奏/文字/Jingle承载",
+          "carrier_hit_terms": "rhythm_text_jingle:大字；闪烁",
+          "vo_excerpt": "中华洞天，世界奇观。",
+          "rule_reason": "主承载物或广告语/成片机制指向 Jingle/节奏，优先把声音节拍变成视觉重复。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "百家好",
+          "product_or_campaign": "年终狂欢季",
+          "copy_primary": "图文节奏/Jingle",
+          "shot_primary": "图文节奏/Jingle",
+          "carrier_primary_label": "节奏/文字/Jingle承载",
+          "carrier_hit_terms": "rhythm_text_jingle:唱段；大字；旋律；节拍",
+          "vo_excerpt": "【唱】百家好；【唱】百家好；【唱】百家好；【唱】百家好；【唱】百家好；【唱】百家好；【唱】百家好；【唱】百家好；【唱】百家好；【唱】百家好",
+          "rule_reason": "主承载物或广告语/成片机制指向 Jingle/节奏，优先把声音节拍变成视觉重复。"
+        }
+      ]
+    },
+    {
+      "operation": "功能显形",
+      "count": 65,
+      "share": 0.1952,
+      "top_copy_types": [
+        {
+          "type": "数字/标准证明",
+          "count": 25,
+          "share_within_operation": 0.3846
+        },
+        {
+          "type": "产品动作锤",
+          "count": 22,
+          "share_within_operation": 0.3385
+        },
+        {
+          "type": "看不见功能显形",
+          "count": 7,
+          "share_within_operation": 0.1077
+        },
+        {
+          "type": "感官材料隐喻",
+          "count": 7,
+          "share_within_operation": 0.1077
+        },
+        {
+          "type": "痛点具象物/敌人",
+          "count": 3,
+          "share_within_operation": 0.0462
+        },
+        {
+          "type": "来源旅程/工艺仪式",
+          "count": 1,
+          "share_within_operation": 0.0154
+        }
+      ],
+      "top_visual_carriers": [
+        {
+          "carrier": "看不见功能显形承载",
+          "count": 60,
+          "share_within_operation": 0.9231
+        },
+        {
+          "carrier": "产品/人物动作承载",
+          "count": 4,
+          "share_within_operation": 0.0615
+        },
+        {
+          "carrier": "对比/状态差异承载",
+          "count": 1,
+          "share_within_operation": 0.0154
+        }
+      ],
+      "top_shot_mechanisms": [
+        {
+          "shot_primary": "看不见功能显形",
+          "count": 57,
+          "share_within_operation": 0.8769
+        },
+        {
+          "shot_primary": "产品动作锤",
+          "count": 4,
+          "share_within_operation": 0.0615
+        },
+        {
+          "shot_primary": "数字/标准证明",
+          "count": 3,
+          "share_within_operation": 0.0462
+        },
+        {
+          "shot_primary": "真假/前后对比",
+          "count": 1,
+          "share_within_operation": 0.0154
+        }
+      ],
+      "policy": {
+        "memory_job": "把看不见的技术、功能、服务路径或问题解决过程显形，让观众看到“问题如何被产品改变”。",
+        "use_when": [
+          "卖点是净烟、保鲜、智能、抗菌、缓震、辅助驾驶等不可见功能",
+          "广告语包含效率、安全、保护、清洁、健康、智能",
+          "用户痛点本身不可见或瞬间难看懂"
+        ],
+        "event_sentence_template": "先显形【问题/干扰物】，再让【产品动作】介入，显示【功能路径】，最后呈现【结果状态改变】。",
+        "nine_grid_pressure_questions": [
+          "问题是否先被看见？",
+          "功能路径是否从产品或使用动作发出？",
+          "结果是否有明确前后状态差异？"
+        ],
+        "hard_fail": [
+          "泛科技光效但没有产品因果",
+          "只说参数，不显示问题和结果",
+          "功能像装饰粒子，观众不知道解决了什么"
+        ]
+      },
+      "example_cases": [
+        {
+          "industry": "餐饮文旅",
+          "brand": "新西兰旅游局",
+          "product_or_campaign": "现在出发作品征集",
+          "copy_primary": "数字/标准证明",
+          "shot_primary": "看不见功能显形",
+          "carrier_primary_label": "看不见功能显形承载",
+          "carrier_hit_terms": "invisible_function_visualization:图标；透明",
+          "vo_excerpt": "和我一起出发；寻找你的百分之百纯净新西兰；新西兰，现在出发",
+          "rule_reason": "主承载物是不可见功能显形，需要把问题、功能路径和结果状态可视化。"
+        },
+        {
+          "industry": "餐饮文旅",
+          "brand": "长隆水上乐园",
+          "product_or_campaign": "开园早鸟票",
+          "copy_primary": "产品动作锤",
+          "shot_primary": "看不见功能显形",
+          "carrier_primary_label": "看不见功能显形承载",
+          "carrier_hit_terms": "invisible_function_visualization:动画；发光；水路",
+          "vo_excerpt": "4月17日长隆水上乐园盛大开园；全新五大洲际体验重磅来袭；超多王牌设备玩不停；和妹子一起冲进全球玩水世界吧；早鸟票限时优惠79元起",
+          "rule_reason": "主承载物是不可见功能显形，需要把问题、功能路径和结果状态可视化。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "鸿星尔克",
+          "product_or_campaign": "专业跑鞋矩阵",
+          "copy_primary": "产品动作锤",
+          "shot_primary": "看不见功能显形",
+          "carrier_primary_label": "看不见功能显形承载",
+          "carrier_hit_terms": "invisible_function_visualization:光束；发光",
+          "vo_excerpt": "鸿星尔克芷境4；好看更好穿；鸿星尔克为国民运动而生",
+          "rule_reason": "主承载物是不可见功能显形，需要把问题、功能路径和结果状态可视化。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "浪莎",
+          "product_or_campaign": "限时满赠明星周边礼品销量第一",
+          "copy_primary": "数字/标准证明",
+          "shot_primary": "看不见功能显形",
+          "carrier_primary_label": "看不见功能显形承载",
+          "carrier_hit_terms": "invisible_function_visualization:透明",
+          "vo_excerpt": "浪莎；高颜；高光；高质感；穿浪莎，轻装上阵",
+          "rule_reason": "主承载物是不可见功能显形，需要把问题、功能路径和结果状态可视化。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "泰兰尼斯",
+          "product_or_campaign": "稳跑鞋上学运动保护",
+          "copy_primary": "痛点具象物/敌人",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:倒；擦；穿；托着",
+          "vo_excerpt": "【人群】摔跤，歪脚！；怕孩子上学运动受伤，；【台词】就穿泰兰尼斯稳跑鞋！；Vibram 狮爪大底，跑步少摔跤；；户外防扭科技，打球少歪脚；；护弓太空碳板，运动少受伤。；【人群】上学就穿泰兰尼斯稳跑鞋！",
+          "rule_reason": "痛点/功能类落到产品动作时，应先显形问题，再让产品动作解决。"
+        }
+      ]
+    },
+    {
+      "operation": "标准挑战",
+      "count": 55,
+      "share": 0.1652,
+      "top_copy_types": [
+        {
+          "type": "数字/标准证明",
+          "count": 49,
+          "share_within_operation": 0.8909
+        },
+        {
+          "type": "真假/前后对比",
+          "count": 2,
+          "share_within_operation": 0.0364
+        },
+        {
+          "type": "产品动作锤",
+          "count": 2,
+          "share_within_operation": 0.0364
+        },
+        {
+          "type": "未识别",
+          "count": 1,
+          "share_within_operation": 0.0182
+        },
+        {
+          "type": "痛点具象物/敌人",
+          "count": 1,
+          "share_within_operation": 0.0182
+        }
+      ],
+      "top_visual_carriers": [
+        {
+          "carrier": "产品/人物动作承载",
+          "count": 37,
+          "share_within_operation": 0.6727
+        },
+        {
+          "carrier": "对比/状态差异承载",
+          "count": 13,
+          "share_within_operation": 0.2364
+        },
+        {
+          "carrier": "感官/材料路径承载",
+          "count": 4,
+          "share_within_operation": 0.0727
+        },
+        {
+          "carrier": "角色/IP/代言承载",
+          "count": 1,
+          "share_within_operation": 0.0182
+        }
+      ],
+      "top_shot_mechanisms": [
+        {
+          "shot_primary": "产品动作锤",
+          "count": 37,
+          "share_within_operation": 0.6727
+        },
+        {
+          "shot_primary": "真假/前后对比",
+          "count": 9,
+          "share_within_operation": 0.1636
+        },
+        {
+          "shot_primary": "数字/标准证明",
+          "count": 4,
+          "share_within_operation": 0.0727
+        },
+        {
+          "shot_primary": "感官材料隐喻",
+          "count": 4,
+          "share_within_operation": 0.0727
+        },
+        {
+          "shot_primary": "角色/IP/名人",
+          "count": 1,
+          "share_within_operation": 0.0182
+        }
+      ],
+      "policy": {
+        "memory_job": "把第一、领先、多少年、多少项、多少倍等证明词，变成观众能一眼看懂的挑战、对比或压力测试。",
+        "use_when": [
+          "广告语含第一、领先、销量、认证、多少年、多少项、百分比",
+          "数字证明的是能力、规模、标准或差异",
+          "需要让“强”有可见标准"
+        ],
+        "event_sentence_template": "让【产品/服务】面对一个具体标准挑战，通过【动作/功能/场景压力】完成挑战，最后把结果锁到品牌证明。",
+        "nine_grid_pressure_questions": [
+          "数字证明了什么具体能力？",
+          "挑战是否可见，而不是只把数字做大？",
+          "产品是否参与挑战过程，而不是只在结尾背书？"
+        ],
+        "hard_fail": [
+          "数字大字成为主画面",
+          "挑战和产品无关",
+          "只做荣誉墙、证书墙、奖杯墙"
+        ]
+      },
+      "example_cases": [
+        {
+          "industry": "餐饮文旅",
+          "brand": "森林海嬉水乐园",
+          "product_or_campaign": "森林乐园会员亲子票",
+          "copy_primary": "数字/标准证明",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:喷；穿；伸手；托着",
+          "vo_excerpt": "来森林海邂逅现实童话王国；落日飞车漫游山林；摩天轮尽赏晚霞；精灵谷萌宠互动；嘉年华嗨翻全场；森林海森林乐园 自然更好玩",
+          "rule_reason": "主诉求或成片机制是数字、标准、真假或前后对比，需要把证明点转成可见挑战或状态差异。"
+        },
+        {
+          "industry": "餐饮文旅",
+          "brand": "森林海嬉水乐园",
+          "product_or_campaign": "嬉水乐园亲子票",
+          "copy_primary": "数字/标准证明",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:喷；拿；穿；伸手",
+          "vo_excerpt": "来；直升机泼水狂欢；50多项目全家无限畅玩；暑期电音炸场；花火漫天；来森林海，夏天才有趣",
+          "rule_reason": "主诉求或成片机制是数字、标准、真假或前后对比，需要把证明点转成可见挑战或状态差异。"
+        },
+        {
+          "industry": "餐饮文旅",
+          "brand": "上海迪士尼度假区",
+          "product_or_campaign": "10岁生日庆典限时体验",
+          "copy_primary": "数字/标准证明",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:穿；伸手",
+          "vo_excerpt": "上海迪士尼10岁生日庆典；限时呈现；全新演出；邀你沉浸体验；一场前所未有的盛会；有你更奇妙",
+          "rule_reason": "主诉求或成片机制是数字、标准、真假或前后对比，需要把证明点转成可见挑战或状态差异。"
+        },
+        {
+          "industry": "餐饮文旅",
+          "brand": "新西兰旅游局",
+          "product_or_campaign": "纯净新西兰轻松遛娃",
+          "copy_primary": "数字/标准证明",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:倒；穿",
+          "vo_excerpt": "这是我们的百分百纯净新西兰，那你的呢？",
+          "rule_reason": "主诉求或成片机制是数字、标准、真假或前后对比，需要把证明点转成可见挑战或状态差异。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "波司登",
+          "product_or_campaign": "南京东路登峰旗舰店焕新启幕",
+          "copy_primary": "数字/标准证明",
+          "shot_primary": "真假/前后对比",
+          "carrier_primary_label": "对比/状态差异承载",
+          "carrier_hit_terms": "product_action:切换 / contrast_state:分屏；切换；前后；对比；灰色",
+          "vo_excerpt": "",
+          "rule_reason": "主诉求或成片机制是数字、标准、真假或前后对比，需要把证明点转成可见挑战或状态差异。"
+        }
+      ]
+    },
+    {
+      "operation": "因果触发",
+      "count": 33,
+      "share": 0.0991,
+      "top_copy_types": [
+        {
+          "type": "产品动作锤",
+          "count": 33,
+          "share_within_operation": 1.0
+        }
+      ],
+      "top_visual_carriers": [
+        {
+          "carrier": "产品/人物动作承载",
+          "count": 33,
+          "share_within_operation": 1.0
+        }
+      ],
+      "top_shot_mechanisms": [
+        {
+          "shot_primary": "产品动作锤",
+          "count": 33,
+          "share_within_operation": 1.0
+        }
+      ],
+      "policy": {
+        "memory_job": "让产品动作成为事件开关：一倒、一穿、一开、一喷、一按，立刻触发可见变化。",
+        "use_when": [
+          "广告语本身就是产品动作或强使用场景",
+          "品类动作非常清楚，如倒油、穿鞋、开盖、切菜、喝饮料",
+          "需要稳定控制 AIGC 输出，减少抽象跑偏"
+        ],
+        "event_sentence_template": "当【产品动作】发生时，【可见承载物/状态】立刻改变，并在 15 秒内重复 2-3 次，最后回到品牌。",
+        "nine_grid_pressure_questions": [
+          "产品动作是否是变化的触发器？",
+          "同一触发动作是否能重复？",
+          "结果变化是否比动作本身更有记忆？"
+        ],
+        "hard_fail": [
+          "只拍动作，没有触发变化",
+          "产品只是摆拍，不进入机制",
+          "动作太普通，不能形成记忆锤"
+        ]
+      },
+      "example_cases": [
+        {
+          "industry": "餐饮文旅",
+          "brand": "上海迪士尼度假区",
+          "product_or_campaign": "10岁生日限定夜场庆典",
+          "copy_primary": "产品动作锤",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:喷；穿",
+          "vo_excerpt": "上海迪士尼10岁生日限定的夏天来了！；嗨玩限时爽快体验；必玩10岁生日全新体验；一夏玩到爽；更有可再玩加时派对；限时10天等你来！",
+          "rule_reason": "主承载物是产品/人物动作，优先让产品成为视觉事件触发器或证明物。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "波司登",
+          "product_or_campaign": "波司登极地极寒穿极地探极致",
+          "copy_primary": "产品动作锤",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:穿；打开",
+          "vo_excerpt": "零下60度；波司登极地极寒；中国南北极考察同款；动态御寒科技2.0；更暖更轻更透气；穿极地，探极致",
+          "rule_reason": "主承载物是产品/人物动作，优先让产品成为视觉事件触发器或证明物。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "公牛世家",
+          "product_or_campaign": "男鞋野适篇",
+          "copy_primary": "产品动作锤",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:穿",
+          "vo_excerpt": "男鞋要舒适，选公牛世家；男鞋要有型，选公牛世家；休闲男鞋，就选公牛世家",
+          "rule_reason": "主承载物是产品/人物动作，优先让产品成为视觉事件触发器或证明物。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "公牛世家",
+          "product_or_campaign": "休闲男鞋有型篇",
+          "copy_primary": "产品动作锤",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:穿",
+          "vo_excerpt": "怎么穿；都有型；休闲男鞋就选公牛世家",
+          "rule_reason": "主承载物是产品/人物动作，优先让产品成为视觉事件触发器或证明物。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "公牛世家",
+          "product_or_campaign": "休闲鞋履专家",
+          "copy_primary": "产品动作锤",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:倒；穿",
+          "vo_excerpt": "上班；聚会；出游；公牛世家男鞋；一双全搞定；选舒适；选有型；休闲男鞋就选公牛世家；公牛世家，休闲鞋履专家",
+          "rule_reason": "主承载物是产品/人物动作，优先让产品成为视觉事件触发器或证明物。"
+        }
+      ]
+    },
+    {
+      "operation": "材料变形",
+      "count": 17,
+      "share": 0.0511,
+      "top_copy_types": [
+        {
+          "type": "感官材料隐喻",
+          "count": 13,
+          "share_within_operation": 0.7647
+        },
+        {
+          "type": "产品动作锤",
+          "count": 2,
+          "share_within_operation": 0.1176
+        },
+        {
+          "type": "角色/IP/名人",
+          "count": 1,
+          "share_within_operation": 0.0588
+        },
+        {
+          "type": "来源旅程/工艺仪式",
+          "count": 1,
+          "share_within_operation": 0.0588
+        }
+      ],
+      "top_visual_carriers": [
+        {
+          "carrier": "产品/人物动作承载",
+          "count": 11,
+          "share_within_operation": 0.6471
+        },
+        {
+          "carrier": "感官/材料路径承载",
+          "count": 6,
+          "share_within_operation": 0.3529
+        }
+      ],
+      "top_shot_mechanisms": [
+        {
+          "shot_primary": "产品动作锤",
+          "count": 11,
+          "share_within_operation": 0.6471
+        },
+        {
+          "shot_primary": "感官材料隐喻",
+          "count": 6,
+          "share_within_operation": 0.3529
+        }
+      ],
+      "policy": {
+        "memory_job": "把香、脆、滑、暖、鲜、浓、爽等感官词，压回产品材料自身的运动、质地和变化。",
+        "use_when": [
+          "广告语含香、脆、丝滑、鲜、暖、柔、轻、浓郁等感官词",
+          "产品材料有强视觉质感，如油线、巧克力、茶汤、面料、冰、蒸汽",
+          "需要避免只拍人物表情和氛围"
+        ],
+        "event_sentence_template": "让【产品材料】在【使用动作/工艺动作】中发生可见变形，变成【感官结果】，最后回到品牌资产。",
+        "nine_grid_pressure_questions": [
+          "感官是否来自材料，而不是人物表情？",
+          "材料变形是否和产品动作有因果？",
+          "一帧画面能否读出品类感？"
+        ],
+        "hard_fail": [
+          "只拍闻香、微笑、享受表情",
+          "材料像无来源特效",
+          "感官氛围脱离产品品类"
+        ]
+      },
+      "example_cases": [
+        {
+          "industry": "餐饮文旅",
+          "brand": "澳大利亚旅游局",
+          "product_or_campaign": "来澳大利亚道一声Gday",
+          "copy_primary": "感官材料隐喻",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:拿；穿",
+          "vo_excerpt": "【台词】到澳大利亚旅游，最精彩的是什么？；【台词】我呢，喜欢那里无比惬意的松弛感。；来澳大利亚，道一声 G'day",
+          "rule_reason": "感官词落到产品动作时，应把感觉转成材料运动或使用瞬间。"
+        },
+        {
+          "industry": "餐饮文旅",
+          "brand": "德克士",
+          "product_or_campaign": "让味蕾酷起来加码狂欢",
+          "copy_primary": "感官材料隐喻",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:拿；穿；伸手",
+          "vo_excerpt": "德克士美味不一样；超大超脆手枪腿；够懂中国味米汉堡；脆嫩多汁四方腿；现煎鸡腿火山菠萝堡；鸡腿排咖喱饭；30周年庆；王牌美味只要13.9元；让味蕾酷起来",
+          "rule_reason": "感官词落到产品动作时，应把感觉转成材料运动或使用瞬间。"
+        },
+        {
+          "industry": "餐饮文旅",
+          "brand": "德克士",
+          "product_or_campaign": "炸鸡拼盘狂欢一夏让味蕾酷起来",
+          "copy_primary": "感官材料隐喻",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:拿；递；伸手",
+          "vo_excerpt": "来德克士，做蛋仔好伙伴！；【台词】哇！；脆皮手枪腿，超大，超多汁！；手枪鸡块，好吃好玩！；德克士蛋仔分享餐等你来！；让味蕾酷起来",
+          "rule_reason": "感官词落到产品动作时，应把感觉转成材料运动或使用瞬间。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "高梵",
+          "product_or_campaign": "黑金鹅绒服",
+          "copy_primary": "角色/IP/名人",
+          "shot_primary": "感官材料隐喻",
+          "carrier_primary_label": "感官/材料路径承载",
+          "carrier_hit_terms": "sensory_material_path:云朵；金色",
+          "vo_excerpt": "我是杨幂；高梵黑金鹅绒服；高级鹅绒；高级暖；高梵；我是杨幂；高梵黑金鹅绒服；高级鹅绒；高级暖；高梵",
+          "rule_reason": "主承载物是感官/材料路径，需要把感觉压回产品材料运动。"
+        },
+        {
+          "industry": "家电家居",
+          "brand": "格力",
+          "product_or_campaign": "鲜花冰箱",
+          "copy_primary": "感官材料隐喻",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:拿；穿；打开",
+          "vo_excerpt": "格力鲜花冰箱，无惧时间；鲜花持续美丽；创新保鲜科技；保鲜、保质、保味；格力鲜花冰箱；好电器，格力造",
+          "rule_reason": "感官词落到产品动作时，应把感觉转成材料运动或使用瞬间。"
+        }
+      ]
+    },
+    {
+      "operation": "关系动作",
+      "count": 14,
+      "share": 0.042,
+      "top_copy_types": [
+        {
+          "type": "关系场景证明",
+          "count": 6,
+          "share_within_operation": 0.4286
+        },
+        {
+          "type": "产品动作锤",
+          "count": 3,
+          "share_within_operation": 0.2143
+        },
+        {
+          "type": "数字/标准证明",
+          "count": 3,
+          "share_within_operation": 0.2143
+        },
+        {
+          "type": "真假/前后对比",
+          "count": 1,
+          "share_within_operation": 0.0714
+        },
+        {
+          "type": "感官材料隐喻",
+          "count": 1,
+          "share_within_operation": 0.0714
+        }
+      ],
+      "top_visual_carriers": [
+        {
+          "carrier": "关系/场景道具承载",
+          "count": 11,
+          "share_within_operation": 0.7857
+        },
+        {
+          "carrier": "产品/人物动作承载",
+          "count": 3,
+          "share_within_operation": 0.2143
+        }
+      ],
+      "top_shot_mechanisms": [
+        {
+          "shot_primary": "关系场景证明",
+          "count": 11,
+          "share_within_operation": 0.7857
+        },
+        {
+          "shot_primary": "产品动作锤",
+          "count": 3,
+          "share_within_operation": 0.2143
+        }
+      ],
+      "policy": {
+        "memory_job": "把家庭、送礼、孩子、陪伴、社交等关系诉求，落到被产品改变的具体动作。",
+        "use_when": [
+          "广告语谈家庭、孩子、妈妈、送礼、陪伴、社交、节日",
+          "关系本身容易拍成泛温情",
+          "产品能改变送、穿、吃、打开、走、分享等动作"
+        ],
+        "event_sentence_template": "在【关系场景】里，人物执行【关系动作】，产品让这个动作变得更好，最后形成品牌记忆。",
+        "nine_grid_pressure_questions": [
+          "关系动作是什么？",
+          "产品怎样改变这个动作？",
+          "情绪是否只是结果，而不是主机制？"
+        ],
+        "hard_fail": [
+          "一家人笑但产品没有作用",
+          "礼盒/孩子/餐桌只是背景",
+          "温情盖过产品利益"
+        ]
+      },
+      "example_cases": [
+        {
+          "industry": "服饰鞋履",
+          "brand": "本来",
+          "product_or_campaign": "火绒绒系列",
+          "copy_primary": "产品动作锤",
+          "shot_primary": "关系场景证明",
+          "carrier_primary_label": "关系/场景道具承载",
+          "carrier_hit_terms": "relationship_scene_prop:亲子；孩子；家庭",
+          "vo_excerpt": "",
+          "rule_reason": "主承载物是关系/场景道具，需要落到产品改变关系动作。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "波司登",
+          "product_or_campaign": "穿波司登过中国年",
+          "copy_primary": "关系场景证明",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:拿；穿",
+          "vo_excerpt": "新岁将至，万象更新。；无论你身在何方，；波司登愿温暖陪伴您和家人。；波司登，温暖中国家庭48年。；穿波司登，过中国年。",
+          "rule_reason": "主承载物是关系/场景道具，需要落到产品改变关系动作。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "波司登",
+          "product_or_campaign": "新年送家人",
+          "copy_primary": "关系场景证明",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:拿；穿；打开",
+          "vo_excerpt": "看过世界，最爱是家；把这份温暖，回馈给我最爱的人；波司登，温暖中国家庭49年；新年送家人，就选波司登",
+          "rule_reason": "主承载物是关系/场景道具，需要落到产品改变关系动作。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "泰兰尼斯",
+          "product_or_campaign": "稳跑鞋校园运动",
+          "copy_primary": "真假/前后对比",
+          "shot_primary": "关系场景证明",
+          "carrier_primary_label": "关系/场景道具承载",
+          "carrier_hit_terms": "product_action:上学 / relationship_scene_prop:孩子；校园",
+          "vo_excerpt": "泰兰尼斯稳跑鞋；驾驭校园各类运动场景；超强缓震；超强抓地；超强抗扭；更懂校园运动保护；运动少受伤；上学就穿泰兰尼斯稳跑鞋",
+          "rule_reason": "主承载物是关系/场景道具，需要落到产品改变关系动作。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "泰兰尼斯",
+          "product_or_campaign": "稳稳卡宝宝走路",
+          "copy_primary": "关系场景证明",
+          "shot_primary": "关系场景证明",
+          "carrier_primary_label": "关系/场景道具承载",
+          "carrier_hit_terms": "product_action:快递 / relationship_scene_prop:妈妈；孩子；宝宝；快递；感动；礼盒",
+          "vo_excerpt": "【台词】宝宝都会走路啦；【台词】快发我个收货地址；【台词】您的快递；【台词】哇，稳稳鞋；【台词】带孩子很辛苦；【台词】希望能帮您分担；送泰兰尼斯；稳稳好礼，稳稳心意",
+          "rule_reason": "主承载物是关系/场景道具，需要落到产品改变关系动作。"
+        }
+      ]
+    },
+    {
+      "operation": "路径旅行",
+      "count": 8,
+      "share": 0.024,
+      "top_copy_types": [
+        {
+          "type": "来源旅程/工艺仪式",
+          "count": 8,
+          "share_within_operation": 1.0
+        }
+      ],
+      "top_visual_carriers": [
+        {
+          "carrier": "产品/人物动作承载",
+          "count": 8,
+          "share_within_operation": 1.0
+        }
+      ],
+      "top_shot_mechanisms": [
+        {
+          "shot_primary": "产品动作锤",
+          "count": 8,
+          "share_within_operation": 1.0
+        }
+      ],
+      "policy": {
+        "memory_job": "把源头、产地、工艺、年份、非遗等来源证明，变成一条穿过产品和使用结果的路径。",
+        "use_when": [
+          "广告语含古法、非遗、源头、产地、百年、年份、窨制、酿造、制造者",
+          "来源本身不是最终利益，需要抵达产品效果",
+          "容易滑向纪录片空镜或牌匾证明"
+        ],
+        "event_sentence_template": "让【来源/工艺承载物】从源头出发，穿过【产品动作】，抵达【使用利益】，最后回到品牌。",
+        "nine_grid_pressure_questions": [
+          "路径从哪里开始？",
+          "是否穿过产品动作？",
+          "最后是否抵达使用利益，而不是停在工坊/产地？"
+        ],
+        "hard_fail": [
+          "老工坊、产地、牌匾成为主画面",
+          "来源没有抵达产品结果",
+          "只做历史感，不做购买理由"
+        ]
+      },
+      "example_cases": [
+        {
+          "industry": "服饰鞋履",
+          "brand": "娥姐家",
+          "product_or_campaign": "香云纱源头工厂店",
+          "copy_primary": "来源旅程/工艺仪式",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:拿；穿",
+          "vo_excerpt": "",
+          "rule_reason": "来源/工艺类落到产品动作时，应把工艺路径连到产品利益。"
+        },
+        {
+          "industry": "家电家居",
+          "brand": "王麻子",
+          "product_or_campaign": "百年厨刀专家",
+          "copy_primary": "来源旅程/工艺仪式",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:拿；穿",
+          "vo_excerpt": "王麻子，真麻利！；切！；斩！；削！；麻利！；【人群】王麻子，真麻利！；【人群】厨刀就选王麻子！；百年厨刀专家，王麻子！",
+          "rule_reason": "来源/工艺类落到产品动作时，应把工艺路径连到产品利益。"
+        },
+        {
+          "industry": "家电家居",
+          "brand": "喜百年装饰",
+          "product_or_campaign": "新春开门红",
+          "copy_primary": "来源旅程/工艺仪式",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:穿；递；举起",
+          "vo_excerpt": "【台词】新年装修 怎么省；【人群】喜百年 发红包；【人群】发 发 发；【人群】预约领红包 装修才更省；线上预约装修 茅台红包送不停",
+          "rule_reason": "来源/工艺类落到产品动作时，应把工艺路径连到产品利益。"
+        },
+        {
+          "industry": "交通出行",
+          "brand": "路虎卫士",
+          "product_or_campaign": "始于1948车型篇",
+          "copy_primary": "来源旅程/工艺仪式",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:穿；打开",
+          "vo_excerpt": "",
+          "rule_reason": "来源/工艺类落到产品动作时，应把工艺路径连到产品利益。"
+        },
+        {
+          "industry": "交通出行",
+          "brand": "路虎卫士",
+          "product_or_campaign": "始于1948品牌片",
+          "copy_primary": "来源旅程/工艺仪式",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:穿",
+          "vo_excerpt": "",
+          "rule_reason": "来源/工艺类落到产品动作时，应把工艺路径连到产品利益。"
+        }
+      ]
+    },
+    {
+      "operation": "符号替换",
+      "count": 4,
+      "share": 0.012,
+      "top_copy_types": [
+        {
+          "type": "角色/IP/名人",
+          "count": 4,
+          "share_within_operation": 1.0
+        }
+      ],
+      "top_visual_carriers": [
+        {
+          "carrier": "产品/人物动作承载",
+          "count": 4,
+          "share_within_operation": 1.0
+        }
+      ],
+      "top_shot_mechanisms": [
+        {
+          "shot_primary": "产品动作锤",
+          "count": 4,
+          "share_within_operation": 1.0
+        }
+      ],
+      "policy": {
+        "memory_job": "让代言人、IP、角色或品牌符号替代普通品类记忆，但必须被产品动作重新锚定。",
+        "use_when": [
+          "广告依赖明星、IP、角色、品牌符号或固定人物资产",
+          "角色本身有识别度，但容易抢走产品",
+          "需要把人物资产变成品类购买线索"
+        ],
+        "event_sentence_template": "让【角色/符号】执行或触发【产品动作】，把普通品类符号替换成品牌专属记忆，最后回到产品。",
+        "nine_grid_pressure_questions": [
+          "角色是否帮助记住产品，而不是只被记住本人？",
+          "角色是否参与产品动作？",
+          "最后是否回到品牌和产品？"
+        ],
+        "hard_fail": [
+          "只记住明星，不记住产品",
+          "人物口播占满，画面无产品动作",
+          "角色和品类无因果关系"
+        ]
+      },
+      "example_cases": [
+        {
+          "industry": "服饰鞋履",
+          "brand": "百斯盾",
+          "product_or_campaign": "买裤子就到百斯盾",
+          "copy_primary": "角色/IP/名人",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:穿",
+          "vo_excerpt": "【台词】大家好！；【台词】我是百斯盾品牌代言人陈小春。；【台词】要体面，穿百斯盾。；【台词】买裤子，就到百斯盾。；【台词】国民好裤，真的好。；【台词】真的好裤哦。；买裤子，就到百斯盾！",
+          "rule_reason": "角色/IP 在当前 v0.6 中暂归符号/资产驱动，但样本极少，需要人工复核是否应新增“角色驱动”操作。"
+        },
+        {
+          "industry": "服饰鞋履",
+          "brand": "鸭鸭",
+          "product_or_campaign": "中国第一件羽绒服制造者",
+          "copy_primary": "角色/IP/名人",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:拿；穿",
+          "vo_excerpt": "鸭鸭，中国第一件羽绒服的制造者；我是鸭鸭品牌全球代言人孙颖莎；天冷了；就穿鸭鸭",
+          "rule_reason": "角色/IP 在当前 v0.6 中暂归符号/资产驱动，但样本极少，需要人工复核是否应新增“角色驱动”操作。"
+        },
+        {
+          "industry": "交通出行",
+          "brand": "路虎卫士",
+          "product_or_campaign": "迪丽热巴士不可挡",
+          "copy_primary": "角色/IP/名人",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:倒",
+          "vo_excerpt": "",
+          "rule_reason": "角色/IP 在当前 v0.6 中暂归符号/资产驱动，但样本极少，需要人工复核是否应新增“角色驱动”操作。"
+        },
+        {
+          "industry": "饮料乳品",
+          "brand": "东鹏补水啦",
+          "product_or_campaign": "快速补充电解质",
+          "copy_primary": "角色/IP/名人",
+          "shot_primary": "产品动作锤",
+          "carrier_primary_label": "产品/人物动作承载",
+          "carrier_hit_terms": "product_action:倒；喝；穿；举起；饮用",
+          "vo_excerpt": "【台词】我是姆巴佩，补水啦！；快速补充电解质；流汗，补水啦！；运动，补水啦！；快速补充电解质；【台词】补水啦！；快速补充电解质，东鹏补水啦！",
+          "rule_reason": "角色/IP 在当前 v0.6 中暂归符号/资产驱动，但样本极少，需要人工复核是否应新增“角色驱动”操作。"
+        }
+      ]
+    }
+  ],
+  "decision_defaults": {
+    "jingle_or_brand_repeat": "节拍化",
+    "number_standard_first_proof": "标准挑战 or 功能显形",
+    "invisible_function_or_technical_benefit": "功能显形",
+    "clear_product_use_action": "因果触发",
+    "sensory_material_word": "材料变形",
+    "relationship_family_gift_scene": "关系动作",
+    "origin_craft_heritage_source": "路径旅行",
+    "celebrity_ip_character_asset": "符号替换, but manually review due to low sample count"
+  },
+  "known_limits": [
+    "The mapping is rule-based from existing labels and hit terms, not a frame-by-frame human relabeling.",
+    "Some operation labels overlap in real ads; use the primary label as a starting point, not a rigid taxonomy.",
+    "符号替换 has only 4 cases and should not be over-generalized without more human review.",
+    "This library validates the decision layer, not actual generated video performance."
+  ]
+}

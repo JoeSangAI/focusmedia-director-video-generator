@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.2.1",
+  "policy": "Observed capabilities are time-stamped hints, never universal model promises. Reverify the selected platform path at runtime when a required modality matters.",
+  "records": [
+    {
+      "platform_path": "众小智 / AI 视频 2.0",
+      "last_observed": "2026-07-13",
+      "capabilities": {
+        "product_or_logo_image": "observed_supported",
+        "complete_audio": "observed_supported",
+        "people_free_product_style_image": "observed_supported",
+        "storyboard_with_people_or_faces": "observed_privacy_rejection",
+        "reference_audio_waveform_preservation": "not_observed"
+      },
+      "confidence": "repeated_case_observation",
+      "evidence": "A 1792x1024 multi-panel storyboard containing several small photorealistic fictional AI faces uploaded successfully but was rejected during Seedance task creation with InputImageSensitiveContentDetected.PrivacyInformation.",
+      "required_action": "Treat any photorealistic face in a storyboard contact sheet as likely ineligible. Preserve approved shot logic and fictional character descriptions as text; upload only people-free product/Logo/style images plus eligible audio."
+    }
+  ]
+}

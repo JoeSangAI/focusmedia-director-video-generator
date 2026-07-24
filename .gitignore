@@ -1,8 +1,17 @@
 .DS_Store
+.env
+.env.*
+.venv/
 node_modules/
 __pycache__/
 *.pyc
 *.log
+*.mp3
+*.wav
+*.m4a
+*.mp4
+*.mov
 tmp/
 dist/
 coverage/
+.focusmedia-creative/

@@ -12,16 +12,21 @@ const DEFAULT_PROCESS_TERMS = [
   '视频预览',
   '生成完成',
   '接口',
-  '九宫格',
-  '参考图',
-  '参考图片',
+  '不要生成九宫格',
+  '不要生成分镜故事板',
+  '不要生成参考图',
+  '不要生成参考图片',
   '当前已保存参数'
 ];
 
 const DEFAULT_RUNTIME_TERMS = [
   '16:9',
+  '480p',
+  '480P',
   '720p',
   '720P',
+  '1080p',
+  '1080P',
   'Prompt Rewrite',
   'prompt rewrite',
   'rewrite off',
@@ -41,17 +46,18 @@ const DEFAULT_STRUCTURE_TERMS = [
 ];
 
 function parseArgs(argv) {
-  const args = { contract: '', prompt: '', outJson: '', outMd: '' };
+  const args = { contract: '', prompt: '', assetManifest: '', outJson: '', outMd: '' };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     const next = () => argv[++i];
     if (arg === '--contract') args.contract = next();
     else if (arg === '--prompt') args.prompt = next();
+    else if (arg === '--asset-manifest') args.assetManifest = next();
     else if (arg === '--out-json') args.outJson = next();
     else if (arg === '--out-md') args.outMd = next();
     else if (arg === '--help') {
       console.log(`Usage:
-  node assert_creative_prompt.js --contract story_contract.json --prompt creative_prompt.md --out-json assertion_report.json [--out-md assertion_report.md]
+  node assert_creative_prompt.js --contract story_contract.json --prompt creative_prompt.md [--asset-manifest asset_manifest.json] --out-json assertion_report.json [--out-md assertion_report.md]
 
 Checks machine-verifiable Creative Prompt contract rules. It does not judge creative quality.`);
       process.exit(0);
@@ -88,6 +94,7 @@ function containsNormalized(haystack, needle) {
 
 function isNegatedOccurrence(promptText, index) {
   const before = promptText.slice(Math.max(0, index - 28), index);
+  if (/[不无]\s*$/.test(before)) return true;
   const boundary = Math.max(
     before.lastIndexOf('，'),
     before.lastIndexOf(','),
@@ -97,7 +104,7 @@ function isNegatedOccurrence(promptText, index) {
     before.lastIndexOf('\n')
   );
   const clause = before.slice(boundary + 1);
-  return /(不要|避免|不得|禁止|不能|不应|不准|无|不可|不要出现|不能出现|不出现|不得出现)/.test(clause);
+  return /(不要|避免|不得|禁止|不能|不应|不准|无|不可|不新增|不增加|不添加|不另配|无需|不要出现|不能出现|不出现|不得出现)/.test(clause);
 }
 
 function hasNonNegatedTerm(promptText, term) {
@@ -124,8 +131,17 @@ function finalShotText(promptText, requiredShots) {
   return promptText.slice(matches[matches.length - 1].index);
 }
 
+function shotSectionText(promptText, shotNumber) {
+  const markers = [...String(promptText || '').matchAll(/(?:^|\n)\s*镜头\s*(\d+)[：:：]?/g)];
+  const index = markers.findIndex((match) => Number(match[1]) === Number(shotNumber));
+  if (index === -1) return '';
+  const start = markers[index].index;
+  const end = index + 1 < markers.length ? markers[index + 1].index : promptText.length;
+  return promptText.slice(start, end);
+}
+
 function countShotMarkers(promptText) {
-  const matches = [...String(promptText || '').matchAll(/镜头\s*\d+[：:：]?/g)];
+  const matches = [...String(promptText || '').matchAll(/(?:^|\n)\s*镜头\s*\d+[：:：]?/g)];
   return matches.length;
 }
 
@@ -166,6 +182,16 @@ function extractVoiceoverScriptLines(scriptText) {
   return rawLines.filter((line) => !/(必须|按顺序|不改字|不调换|逐句完整)/.test(line));
 }
 
+function extractTextPlan(promptText) {
+  const headingMatch = /(?:^|\n)\s*文字计划\s*[：:]/.exec(promptText);
+  if (!headingMatch) return '';
+  const start = headingMatch.index + headingMatch[0].length;
+  const rest = promptText.slice(start);
+  const nextHeading = /\n\s*(核心动作|动作与道具逻辑|镜头\s*\d+|必要约束)\s*[：:]/.exec(rest);
+  const end = nextHeading ? start + nextHeading.index : promptText.length;
+  return promptText.slice(start, end);
+}
+
 function collectForbiddenTerms(contract, key, defaults) {
   const custom = Array.isArray(contract[key]) ? contract[key] : [];
   return [...new Set([...defaults, ...custom].filter(Boolean))];
@@ -175,8 +201,22 @@ function addIssue(issues, severity, code, message, upstreamOwner, sample = '') {
   issues.push({ severity, code, message, upstream_owner: upstreamOwner, sample });
 }
 
-function assertCreativePrompt(contract, promptText) {
+function assertCreativePrompt(contract, promptText, assetManifest = null) {
   const issues = [];
+  const audioControl = contract.audio_control_contract && typeof contract.audio_control_contract === 'object'
+    ? contract.audio_control_contract
+    : null;
+  const assetDriven = contract.prompt_mode === 'asset_driven' || Boolean(audioControl && audioControl.complete_mix === true);
+  const manifestAssets = assetManifest && Array.isArray(assetManifest.assets) ? assetManifest.assets : [];
+  const hasProductAssetAuthority = manifestAssets.some((asset) => {
+    const type = String(asset.type || '').toLowerCase();
+    const slot = String(asset.slot || '').trim();
+    const authority = Array.isArray(asset.authority) ? asset.authority.map((item) => String(item).toLowerCase()) : [];
+    const productTypes = ['product', 'packshot', 'sku', 'package', 'product_family', 'product_image'];
+    const productAuthorities = ['product', 'product_identity', 'packaging', 'package', 'sku', 'packshot'];
+    const controlsProduct = productTypes.includes(type) || authority.some((item) => productAuthorities.includes(item));
+    return asset.platform_eligible !== false && controlsProduct && slot && promptText.includes(slot);
+  });
 
   const requiredCopy = [
     ...(Array.isArray(contract.required_copy) ? contract.required_copy : []),
@@ -200,7 +240,7 @@ function assertCreativePrompt(contract, promptText) {
     }
   }
 
-  if (requiredVoiceoverScript.length > 0) {
+  if (requiredVoiceoverScript.length > 0 && !assetDriven) {
     const voiceoverScript = extractVoiceoverScript(promptText);
     if (!voiceoverScript.exists) {
       addIssue(
@@ -258,6 +298,18 @@ function assertCreativePrompt(contract, promptText) {
         if (index >= 0) previousIndex = index;
       }
     }
+  } else if (requiredVoiceoverScript.length > 0) {
+    const normalizedPrompt = normalizeChineseText(promptText);
+    let previousIndex = -1;
+    for (const copy of requiredVoiceoverScript) {
+      const index = normalizedPrompt.indexOf(normalizeChineseText(copy), previousIndex + 1);
+      if (index < 0) continue;
+      if (index < previousIndex) {
+        addIssue(issues, 'high', 'required_copy_order_error', `必读台词顺序错误：${copy}`, 'prompt_builder', copy);
+        break;
+      }
+      previousIndex = index;
+    }
   }
 
   const brand = contract.brand || '';
@@ -266,12 +318,17 @@ function assertCreativePrompt(contract, promptText) {
   }
 
   const product = contract.product || '';
-  if (product && !containsNormalized(promptText, product)) {
+  if (product && !containsNormalized(promptText, product) && !hasProductAssetAuthority) {
     addIssue(issues, 'medium', 'missing_product', `缺少产品名：${product}`, 'prompt_builder', product);
   }
 
   for (const asset of Array.isArray(contract.required_assets) ? contract.required_assets : []) {
-    const terms = Array.isArray(asset.terms) && asset.terms.length ? asset.terms : [asset.name].filter(Boolean);
+    const terms = Array.isArray(asset.prompt_terms)
+      ? asset.prompt_terms
+      : (asset.required_in_prompt === false
+        ? []
+        : (Array.isArray(asset.terms) && asset.terms.length ? asset.terms : [asset.name].filter(Boolean)));
+    if (terms.length === 0) continue;
     const missingTerms = terms.filter((term) => !containsNormalized(promptText, term));
     if (missingTerms.length > 0) {
       addIssue(
@@ -287,7 +344,7 @@ function assertCreativePrompt(contract, promptText) {
 
   const structureTerms = Array.isArray(contract.required_structure) && contract.required_structure.length
     ? contract.required_structure
-    : DEFAULT_STRUCTURE_TERMS;
+    : (assetDriven ? [] : DEFAULT_STRUCTURE_TERMS);
   for (const term of structureTerms) {
     if (!promptText.includes(term)) {
       addIssue(issues, 'medium', 'missing_official_structure', `缺少 Prompt 结构项：${term}`, 'prompt_builder', term);
@@ -303,6 +360,199 @@ function assertCreativePrompt(contract, promptText) {
         `缺少 Pipeline 级提示词颗粒度：${term}`,
         'prompt_builder',
         term
+      );
+    }
+  }
+
+  if (audioControl) {
+    for (const term of Array.isArray(audioControl.required_prompt_terms) ? audioControl.required_prompt_terms : []) {
+      if (!containsNormalized(promptText, term)) {
+        addIssue(
+          issues,
+          'high',
+          'missing_audio_control_term',
+          `缺少完整音频控制项：${term}`,
+          'audio_control_contract',
+          term
+        );
+      }
+    }
+    for (const term of Array.isArray(audioControl.forbidden_prompt_terms) ? audioControl.forbidden_prompt_terms : []) {
+      if (hasNonNegatedTerm(promptText, term)) {
+        addIssue(
+          issues,
+          'high',
+          'conflicting_audio_instruction',
+          `完整混音已提供，但 Prompt 仍要求额外声音：${term}`,
+          'audio_control_contract',
+          term
+        );
+      }
+    }
+  }
+
+  const characterBible = contract.character_bible && typeof contract.character_bible === 'object'
+    ? contract.character_bible
+    : null;
+  if (characterBible && characterBible.control_mode !== 'asset_reference') {
+    for (const term of Array.isArray(characterBible.required_prompt_terms) ? characterBible.required_prompt_terms : []) {
+      if (!containsNormalized(promptText, term)) {
+        addIssue(
+          issues,
+          'high',
+          'missing_character_control_term',
+          `缺少人物连续性控制项：${term}`,
+          'character_bible',
+          term
+        );
+      }
+    }
+    for (const role of Array.isArray(characterBible.roles) ? characterBible.roles : []) {
+      const roleTerms = uniqueNonEmpty([
+        role.role_id,
+        ...(Array.isArray(role.required_prompt_terms) ? role.required_prompt_terms : [])
+      ]);
+      for (const term of roleTerms) {
+        if (!containsNormalized(promptText, term)) {
+          addIssue(
+            issues,
+            'high',
+            'missing_character_role_term',
+            `人物 ${role.role_id || role.role || '-'} 缺少稳定定义：${term}`,
+            'character_bible',
+            term
+          );
+        }
+      }
+    }
+    for (const term of Array.isArray(characterBible.relationship_terms) ? characterBible.relationship_terms : []) {
+      if (!containsNormalized(promptText, term)) {
+        addIssue(
+          issues,
+          'high',
+          'missing_relationship_term',
+          `缺少明确人物关系：${term}`,
+          'relationship_map',
+          term
+        );
+      }
+    }
+  }
+
+  for (const shotCast of contract.shot_cast_plan_in_prompt === false ? [] : (Array.isArray(contract.shot_cast_plan) ? contract.shot_cast_plan : [])) {
+    const shotText = shotSectionText(promptText, shotCast.shot);
+    for (const roleId of Array.isArray(shotCast.role_ids) ? shotCast.role_ids : []) {
+      if (!containsNormalized(shotText, roleId)) {
+        addIssue(
+          issues,
+          'high',
+          'missing_shot_cast_role',
+          `镜头${shotCast.shot}缺少指定人物：${roleId}`,
+          'shot_cast_plan',
+          roleId
+        );
+      }
+    }
+  }
+
+  const textGeneration = contract.text_generation_contract && typeof contract.text_generation_contract === 'object'
+    ? contract.text_generation_contract
+    : null;
+  if (textGeneration) {
+    const textPlan = assetDriven ? promptText : extractTextPlan(promptText);
+    for (const term of Array.isArray(textGeneration.required_prompt_terms) ? textGeneration.required_prompt_terms : []) {
+      if (!containsNormalized(promptText, term)) {
+        addIssue(
+          issues,
+          'high',
+          'missing_text_layer_control_term',
+          `缺少文字分层控制项：${term}`,
+          'text_layer_split',
+          term
+        );
+      }
+    }
+    for (const term of Array.isArray(textGeneration.allowed_generated_text) ? textGeneration.allowed_generated_text : []) {
+      if (!containsNormalized(textPlan, term)) {
+        addIssue(
+          issues,
+          'medium',
+          'allowed_flower_text_not_declared',
+          `允许生成的花字未在文字计划中明确：${term}`,
+          'text_layer_split',
+          term
+        );
+      }
+    }
+    for (const term of Array.isArray(textGeneration.post_overlay_text) ? textGeneration.post_overlay_text : []) {
+      if (containsNormalized(textPlan, term)) {
+        addIssue(
+          issues,
+          'high',
+          'post_overlay_text_requested_in_generation',
+          `后期字幕被错误放回生成阶段的文字计划：${term}`,
+          'text_layer_split',
+          term
+        );
+      }
+    }
+    for (const cue of Array.isArray(textGeneration.forbidden_positive_cues) ? textGeneration.forbidden_positive_cues : []) {
+      if (hasNonNegatedTerm(promptText, cue)) {
+        addIssue(
+          issues,
+          'high',
+          'plain_subtitle_generation_cue',
+          `生成提示词仍在正向要求纯文字字幕：${cue}`,
+          'text_layer_split',
+          cue
+        );
+      }
+    }
+  }
+
+  const audienceReview = contract.audience_interpretation_review && typeof contract.audience_interpretation_review === 'object'
+    ? contract.audience_interpretation_review
+    : null;
+  if (!audienceReview) {
+    addIssue(
+      issues,
+      'high',
+      'audience_interpretation_review_missing',
+      '缺少生成前大众语义与礼俗风险审查门禁',
+      'audience_interpretation_review',
+      'missing review summary'
+    );
+  } else {
+    if (audienceReview.required !== true) {
+      addIssue(
+        issues,
+        'high',
+        'audience_interpretation_review_disabled',
+        '生成前大众语义与礼俗风险审查不能被设为可选',
+        'audience_interpretation_review',
+        String(audienceReview.required)
+      );
+    }
+    const acceptedStatuses = new Set(['pass', 'pass_after_revision']);
+    if (!acceptedStatuses.has(String(audienceReview.status || '').toLowerCase())) {
+      addIssue(
+        issues,
+        'high',
+        'audience_interpretation_review_not_passed',
+        '大众语义审片尚未通过，不能进入生成',
+        'audience_interpretation_review',
+        audienceReview.status || 'missing status'
+      );
+    }
+    const blockers = Array.isArray(audienceReview.unresolved_blockers) ? audienceReview.unresolved_blockers : [];
+    if (blockers.length > 0) {
+      addIssue(
+        issues,
+        'high',
+        'audience_interpretation_blockers_unresolved',
+        `大众语义审片仍有 ${blockers.length} 个未解决的 P0/P1 风险`,
+        'audience_interpretation_review',
+        blockers.join('; ')
       );
     }
   }
@@ -376,6 +626,44 @@ function assertCreativePrompt(contract, promptText) {
     }
   }
 
+  if (assetManifest && Array.isArray(assetManifest.assets)) {
+    for (const asset of assetManifest.assets) {
+      const slot = String(asset.slot || '').trim();
+      const eligible = asset.platform_eligible !== false;
+      const fallbackMode = String(asset.fallback_mode || '').trim();
+      if (asset.required === true && !eligible && !fallbackMode) {
+        addIssue(
+          issues,
+          'high',
+          'required_asset_not_platform_eligible',
+          `必需素材不能被当前平台使用：${slot || asset.type || 'unnamed asset'}`,
+          'generation_adapter',
+          slot
+        );
+      }
+      if (slot && eligible && asset.required_in_prompt !== false && !promptText.includes(slot)) {
+        addIssue(
+          issues,
+          'high',
+          'asset_slot_not_bound_in_prompt',
+          `提示词未绑定可用素材槽位：${slot}`,
+          'generation_assembler',
+          slot
+        );
+      }
+      if (slot && !eligible && promptText.includes(slot)) {
+        addIssue(
+          issues,
+          'high',
+          'ineligible_asset_referenced',
+          `提示词引用了当前平台不可用的素材：${slot}`,
+          'generation_assembler',
+          slot
+        );
+      }
+    }
+  }
+
   const status = issues.some((issue) => issue.severity === 'high' || issue.severity === 'medium') ? 'fail' : 'pass';
   return {
     status,
@@ -414,7 +702,8 @@ function main() {
   const args = parseArgs(process.argv.slice(2));
   const contract = readJson(args.contract);
   const promptText = fs.readFileSync(args.prompt, 'utf8');
-  const report = assertCreativePrompt(contract, promptText);
+  const assetManifest = args.assetManifest ? readJson(args.assetManifest) : null;
+  const report = assertCreativePrompt(contract, promptText, assetManifest);
   if (args.outJson) {
     fs.mkdirSync(path.dirname(path.resolve(args.outJson)), { recursive: true });
     fs.writeFileSync(args.outJson, JSON.stringify(report, null, 2), 'utf8');

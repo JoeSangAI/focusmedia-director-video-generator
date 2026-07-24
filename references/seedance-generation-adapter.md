@@ -1,94 +1,138 @@
-# Seedance / 众小智 Generation Adapter
+# Generation Adapter V0.2
+
+## Contents
+
+- Adapter boundary and input contract
+- Job packaging and asset preflight
+- Audio preparation and media validation
+- Submission workflow
+
+The adapter packages an already-approved Creative Prompt, asset manifest, and runtime config. It does not author or rewrite creative content.
 
 ## Boundary
 
-The Creative Prompt describes only the ad that should appear and sound in the video. The Generation Adapter owns platform and runtime concerns:
+The Generation Assembler decides asset authority and writes the lean prompt. The adapter owns:
 
-- model/platform choice
-- duration, aspect ratio, resolution
-- prompt rewrite setting
-- product image and audio reference uploads
-- submission checklist
-- generated-video download path
-- validation artifacts
+- platform/model selection;
+- duration, aspect, resolution, rewrite, and sound settings;
+- platform eligibility and privacy checks;
+- copying/uploading selected assets with stable slot mapping;
+- submission checklist and output paths;
+- technical output validation.
 
-Do not put runtime words such as `众小智`, `Seedance`, `AI视频2.0`, `720p`, `mp4下载链接`, `接口`, or `Prompt Rewrite` into the Creative Prompt unless the actual execution channel requires a separate submission wrapper.
+The bundled script creates a local submission package. Live 众小智 submission uses the separately installed internal `zxz` CLI as a thin operator; browser clicking and alternate video providers are not normal execution paths.
 
-The packaged adapter creates local task packages and validation reports. It does not include a live remote 众小智 HTTP submission because no stable public API contract is bundled. If real API docs and credentials are supplied, implement them behind the same adapter boundary.
+## Job Payload
 
-## Generation Routes
-
-### Product Image + Audio Reference
-
-Use when a satisfactory full ad audio already exists.
-
-Inputs:
-
-- `@Image 1`: product/KV image for packaging and product identity.
-- `@Audio 1`: complete 15-second audio reference with VO, BGM, SFX, rhythm, pauses, emphasis, and final brand landing.
-- Prompt still lists the exact VO lines, but performance control can be more concise because `@Audio 1` carries rhythm and delivery.
-
-Hard rule:
-
-```text
-@Audio 1 是最高优先级，是完整成片音频参考。
+```json
+{
+  "jobName": "brand-campaign-sample",
+  "creativePromptPath": "/path/to/creative_prompt.md",
+  "runtimeConfig": {
+    "platform": "众小智 AI 视频 2.0",
+    "model": "Seedance / AI 视频 2.0",
+    "generation_phase": "exploration",
+    "duration_seconds": 15,
+    "aspect_ratio": "16:9",
+    "resolution": "480p",
+    "prompt_rewrite": false
+  },
+  "assets": [
+    {
+      "slot": "@Audio 1",
+      "type": "complete_audio",
+      "path": "/path/to/prepared.mp3",
+      "authority": ["lyrics", "rhythm", "pauses", "bgm", "sfx", "ending"],
+      "required": true,
+      "platform_eligible": true,
+      "required_in_prompt": true
+    },
+    {
+      "slot": "@Image 7",
+      "type": "storyboard",
+      "path": "/path/to/storyboard.png",
+      "authority": ["shot_order", "composition", "action"],
+      "required": false,
+      "platform_eligible": false,
+      "fallback_mode": "text_storyboard",
+      "required_in_prompt": false
+    }
+  ]
+}
 ```
 
-Do not post-produce by pasting audio onto an unrelated generated video and call it audio-reference generation.
+Pass either `creativePrompt` or `creativePromptPath`. The script fails rather than inventing a prompt.
 
-### Product Image + Strong VO Prompt
+## Commands
 
-Use when letting Seedance generate VO, BGM, and SFX directly.
+Create a submission package:
 
-Inputs:
+```bash
+python3 scripts/seedance_job_adapter.py create-job --payload payload.json --out-root /path/to/jobs
+```
 
-- `@Image 1`: product/KV image.
-- No audio file.
-- Prompt must specify complete VO, voice persona, accent boundary, emphasis, pauses, emotion, pronunciation hints, and final landing.
+Package one audio prompt into at least three identical-input jobs:
 
-This route can be faster and more integrated, but product fidelity and VO compliance remain model risks.
+```bash
+python3 scripts/seedance_job_adapter.py audio-job --payload audio_payload.json --out-root /path/to/audio-jobs
+```
 
-### Audio Generation Task
+Prepare a slightly overlong selected audio with stream copy:
 
-Use an audio model first when VO performance matters. The audio prompt should demand a strict 15-second complete Chinese ad audio, not "about 15 seconds." After selection, trim/clean tail noise if needed, then use the audio as `@Audio 1`.
+```bash
+python3 scripts/seedance_job_adapter.py prepare-audio --input selected.mp3 --output prepared.mp3 --duration 14.95
+```
 
-## Submit Order
+Validate media or a generated output:
 
-1. Open a clean new 众小智 conversation.
-2. Switch to `众小智-AI视频2.0`.
-3. Upload product image and confirm the image preview appears.
-4. If using audio route, upload the cleaned audio and confirm the filename appears.
-5. Paste the generated prompt.
-6. Generate, download MP4, and save it into the job's `seedance-output/`.
-7. Run `validate-output` to create ffprobe JSON and a contact sheet.
+```bash
+python3 scripts/seedance_job_adapter.py validate-media --path file.mp3
+python3 scripts/seedance_job_adapter.py validate-output --path output.mp4 --validation-dir validation
+```
 
-Avoid reusing old conversations with previous videos, old audio, failed prompts, or conflicting references.
+## Preflight
 
-## Output Quality Bands
+After cloning or updating the skill, check local dependencies:
 
-- 60%: video generates, product is roughly recognizable, but rhythm or voice does not follow.
-- 80%: product image, audio/prompt structure, rhythm, and final brand landing mostly work; Chinese text can still be unstable.
-- 95%: frame rhythm, mouth/action timing, product exposure, audio emphasis, final lockup, and key Chinese text are all close enough for production.
+```bash
+python3 scripts/check_environment.py
+```
 
-## Payload Fields
+Before any upload or paid generation, list the current valid profiles:
 
-`seedance_job_adapter.py` accepts a JSON payload with these useful fields:
+```bash
+zxz --profile focusmedia doctor
+```
 
-- `jobName`
-- `strategy`: `image_audio` or `image_only`
-- `productName`
-- `slogan`
-- `brandContext`
-- `productImagePath`
-- `audioPath`
-- `voiceoverLines`
-- `videoPrompt`
-- `audioPrompt`
-- `timeline`
-- `duration`
-- `aspectRatio`
-- `resolution`
-- `visualStyle`
-- `forbidden`
+Select a valid Seedance 2.0 profile and run the same command again with `--generation-profile <verified-generation-profile>`. Do not hardcode a profile name copied from another machine.
 
-The adapter writes a manifest, prompt file, checklist, copied input assets when paths exist, and output/validation folders.
+The adapter rejects:
+
+- missing required assets;
+- required assets that are platform-ineligible without a fallback;
+- process phrases such as direct-model invocation, grid-generation instructions, preview, or download requests inside Creative Prompt;
+- runtime resolution terms inside Creative Prompt.
+
+It copies only eligible assets. Ineligible storyboard/character assets remain in the manifest with an explicit fallback such as `text_storyboard`.
+
+## Submission
+
+- Import one verified platform profile after `zxz auth login`:
+
+```bash
+zxz profiles import-chat <verified-chat-id> --name <verified-generation-profile>
+```
+
+- Submit an approved package without rewriting its prompt or remapping its assets:
+
+```bash
+python3 scripts/seedance_job_adapter.py submit-job \
+  --manifest /path/to/submission_manifest.json \
+  --generation-profile <verified-generation-profile> \
+  --wait
+```
+
+- The adapter only maps the package to `zxz`; authentication, upload, preflight, submission, polling, download, retries, and redacted diagnostics stay inside the CLI.
+- `zxz` runs a read-only preflight before any upload or paid generation and fails explicitly when the platform contract changed.
+- Do not replace a missing or failed `zxz` path with another video API or browser-click submission. Preserve the approved package and repair the 众小智 dependency or profile.
+- Generate the planned identical-input batch without changing prompt or assets, then run technical and creative validation on every exact output.

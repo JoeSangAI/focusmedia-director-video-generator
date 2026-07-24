@@ -5,14 +5,26 @@ const path = require('path');
 const ARTIFACTS = [
   ['brief', 'brief.json', false],
   ['story', 'story.md', false],
+  ['audio_prompt', 'audio_prompt.md', true],
+  ['audio_prompt_review', 'audio_prompt_review.json', true],
+  ['audio_beat_map', 'audio_beat_map.json', true],
   ['story_contract', 'story_contract.json', true],
   ['shot_script', 'shot_script.json', true],
+  ['storyboard_assertion_report', 'storyboard_assertion_report.json', true],
+  ['director_detail_plans', 'director_detail_plans.json', true],
+  ['text_overlay_plan', 'text_overlay_plan.json', true],
   ['storyboard_manifest', 'storyboard_manifest.json', false],
   ['creative_prompt', 'creative_prompt.md', true],
   ['assertion_report', 'assertion_report.json', true],
   ['generation_result', 'generation_result.json', true],
   ['asr_vo_check', 'asr_vo_check.json', true],
-  ['review', 'review.json', true]
+  ['character_continuity_check', 'character_continuity_check.json', true],
+  ['audience_interpretation_review', 'audience_interpretation_review.json', true],
+  ['audience_interpretation_assertion_report', 'audience_interpretation_assertion_report.json', true],
+  ['audience_interpretation_postreview', 'audience_interpretation_postreview.json', true],
+  ['audience_interpretation_postreview_assertion_report', 'audience_interpretation_postreview_assertion_report.json', true],
+  ['review', 'review.json', true],
+  ['take_review', 'take_review.json', true]
 ];
 
 const VALID_SCOPES = new Set(['case_candidate', 'category_candidate', 'global_candidate']);
