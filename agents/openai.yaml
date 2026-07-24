@@ -1,4 +1,4 @@
 interface:
   display_name: "FocusMedia TVC Creative Director"
-  short_description: "Director-led multimodal TVC creation and review"
-  default_prompt: "Use $focusmedia-tvc-creative-director to turn this locked ad message or rich brief into a director-approved, multimodal Focus Media TVC workflow."
+  short_description: "Director, audio, storyboard, and Zhongxiaozhi workflow"
+  default_prompt: "Use $focusmedia-tvc-creative-director to turn this locked message or rich brief into a director-approved Focus Media TVC with audio, storyboard, Zhongxiaozhi generation, and validation."

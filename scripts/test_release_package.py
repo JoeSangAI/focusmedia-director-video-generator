@@ -15,6 +15,15 @@ PERSONAL_PATH = re.compile("/" + "Users" + r"/[^/\s\"']+")
 
 files = [path for path in ROOT.rglob("*") if path.is_file() and ".git" not in path.parts]
 relative_files = {path.relative_to(ROOT).as_posix() for path in files}
+required_capability_files = {
+    "references/storyboard-execution.md",
+    "references/doubao-audio-generation.md",
+    "scripts/generate_doubao_audio.js",
+    "scripts/generate_doubao_tts.js",
+    "scripts/assert_storyboard_density.js",
+    "scripts/seedance_job_adapter.py",
+}
+assert required_capability_files <= relative_files, "release package is missing a required end-to-end capability"
 
 for path in files:
     relative = path.relative_to(ROOT)

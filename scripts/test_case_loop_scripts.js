@@ -53,6 +53,7 @@ assert(fs.existsSync(path.join(caseDir, 'audio_prompt_review.json')));
 assert(fs.existsSync(path.join(caseDir, 'audio_jobs.json')));
 assert(fs.existsSync(path.join(caseDir, 'audio_beat_map.json')));
 assert(fs.existsSync(path.join(caseDir, 'storyboard_assertion_report.json')));
+assert(fs.existsSync(path.join(caseDir, 'storyboard_manifest.json')));
 assert(fs.existsSync(path.join(caseDir, 'storyboard_asset_bindings.json')));
 assert(fs.existsSync(path.join(caseDir, 'asset_manifest.json')));
 assert(fs.existsSync(path.join(caseDir, 'runtime_config.json')));

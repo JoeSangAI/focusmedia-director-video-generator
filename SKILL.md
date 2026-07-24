@@ -31,6 +31,21 @@ zxz --profile focusmedia doctor
 
 Select a valid Seedance 2.0 generation profile, then verify that exact profile with `zxz --profile focusmedia doctor --generation-profile "<verified-generation-profile>"`. If authentication is missing, use `zxz --profile focusmedia auth login`. Use a browser only when that login flow requires unavoidable user interaction.
 
+## Capability Boundary
+
+Treat this repository as the single workflow owner for forward TVC creation. It includes the director method, audio and TTS clients, storyboard execution contract, case schemas, prompt/asset assembly, 众小智 adapter, hard-gate validators, and learning loop.
+
+Do not require a separately installed `focusmedia-storyboard` skill. Read the bundled storyboard reference and execute that role inside this workflow.
+
+Keep these runtime dependencies explicit:
+
+- use the host agent's image-generation capability to render an actual 3x3 storyboard bitmap; when unavailable, return the complete text storyboard, manifest, and board-generation prompt without pretending an image was generated;
+- require a separately installed and authenticated internal `zxz` CLI for live 众小智 video generation;
+- require authorized Doubao credentials only when generating audio or plain TTS;
+- require Node.js, Python, FFmpeg/FFprobe, and NumPy for the bundled scripts.
+
+Cloning the skill provides the workflow and executable helpers, not third-party models, company credentials, or paid-generation quota.
+
 ## Core Principles
 
 1. **Lock the message before directing it.** Treat approved ad copy as immutable. If the user needs slogan creation or positioning first, finish that upstream before directing the film.
@@ -112,7 +127,7 @@ If this sentence cannot be written clearly, do not proceed to execution.
 
 ### 4. Delegate execution
 
-After the Director Contract is accepted, use the handoff contracts in `references/agent-handoffs-v0.2.md` and the shot/retake rules in `references/director-execution-and-retake-v0.1.md`.
+After the Director Contract is accepted, use the handoff contracts in `references/agent-handoffs-v0.2.md`, the detailed storyboard rules in `references/storyboard-execution.md`, and the shot/retake rules in `references/director-execution-and-retake-v0.1.md`.
 
 - Classify `audio_dependency` before delegation. Use `audio_first` for Rap, Jingle, dance, lyric-led montage, or any film whose final cuts depend on the generated track. Use parallel execution only when the storyboard can be finalized without hearing the selected audio.
 - In development mode, show the exact `audio_prompt.md` to the project owner and record an approved prompt hash before spending generation quota.
@@ -216,6 +231,7 @@ Classify failure as `upstream_contract_gap`, `prompt_gap`, `asset_or_adapter_gap
 
 - Read `references/director-knowledge-333.md` for creative-mechanism and memory-encoding decisions.
 - Read `references/agent-handoffs-v0.2.md` before delegating audio, storyboard, or assembly.
+- Read `references/storyboard-execution.md` before writing or revising the shot script, storyboard manifest, board prompt, or visual board.
 - Read `references/director-execution-and-retake-v0.1.md` before finalizing shots or deciding whether to regenerate a take.
 - Read `references/multimodal-control-v0.2.md` before choosing assets or a platform route.
 - Read `references/platform-capability-registry.json` when a required reference modality depends on current platform support.
